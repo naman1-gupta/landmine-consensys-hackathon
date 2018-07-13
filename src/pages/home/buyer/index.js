@@ -11,12 +11,16 @@ class Buyer extends Component {
   };
 
   componentDidMount() {
-    this.getData(res => {
+    setTimeout(() => {
       this.setState({
         loading: false,
-        data: res.results
+        data: [
+          {
+            name: '200'
+          }
+        ]
       });
-    });
+    }, 500);
   }
 
   render() {
