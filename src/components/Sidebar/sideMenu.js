@@ -31,7 +31,7 @@ class SideMenu extends Component {
               </span>
             }
           >
-            <MenuItemGroup key="g1" title="Item 1">
+            <MenuItemGroup key="g1" title="Roles">
               <Menu.Item key="1">
                 <Link to="/home/seller">
                   Seller
@@ -48,7 +48,7 @@ class SideMenu extends Component {
                 </Link>
               </Menu.Item>
             </MenuItemGroup>
-            <MenuItemGroup key="g2" title="Item 2">
+            <MenuItemGroup key="g2" title="Advanced">
               <Menu.Item key="4">Option 4</Menu.Item>
             </MenuItemGroup>
           </SubMenu>
