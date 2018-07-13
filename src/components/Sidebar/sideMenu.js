@@ -23,13 +23,23 @@ class SideMenu extends Component {
             }
           >
             <MenuItemGroup key="g1" title="Item 1">
-              <Menu.Item key="1">Option 1</Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
+              <Menu.Item key="1">
+                <Link to="/home/seller">
+                  Seller
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <Link to="/home/buyer">
+                  Buyer
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <Link to="/home/administration">
+                  Administration
+                </Link>
+              </Menu.Item>
             </MenuItemGroup>
             <MenuItemGroup key="g2" title="Item 2">
-              <Menu.Item key="3">
-                <Link to="/home/seller">Option 3</Link>
-              </Menu.Item>
               <Menu.Item key="4">Option 4</Menu.Item>
             </MenuItemGroup>
           </SubMenu>
