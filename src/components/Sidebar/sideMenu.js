@@ -29,9 +29,9 @@ class SideMenu extends Component {
 
     return (
       <Sider width={240} style={{ background: '#fff' }}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Link style={{ display: 'flex', justifyContent: 'center' }} to="/home">
           <img src={Logo} style={{ width: 120 }} />
-        </div>
+        </Link>
         <Menu style={{ width: 240, height: '100vh' }} selectedKeys={[selectionMenu]} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode="inline">
           <SubMenu
             key="sub1"
