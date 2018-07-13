@@ -10,6 +10,7 @@ import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Seller from './seller';
 import Buyer from './buyer';
+import Administration from './administration';
 
 import './home.css';
 
@@ -36,6 +37,7 @@ class Home extends Component {
               <PrivateRoute exact path="/" component={() => <h1>hii</h1>} />
               <PrivateRoute exact path="/home/seller" component={Seller} />
               <PrivateRoute exact path="/home/buyer" component={Buyer} />
+              <PrivateRoute exact path="/home/administration" component={Administration} />
             </Content>
           </Layout>
         </Layout>
