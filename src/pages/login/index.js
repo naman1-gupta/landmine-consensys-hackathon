@@ -9,6 +9,8 @@ import { LoginContainer, Sidebar } from '../../elements/Container';
 import uport from '../../utils/uport';
 import { loginUser } from '../../actions/uport';
 
+import Logo from '../../assets/logo.svg';
+
 import './login.css';
 
 class Login extends PureComponent {
@@ -72,6 +74,16 @@ class Login extends PureComponent {
               <LoginContainer native state={!this.state.login ? 'show' : 'showAndHide'}>
                 {styles => (
                   <div className="form">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img
+                        src={Logo}
+                        style={{
+                          width: 143,
+                          position: 'absolute',
+                          top: '-271px'
+                        }}
+                      />
+                    </div>
                     <animated.div style={{ ...styles, transform: styles.y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
                       <div className="title">
                         <div className="main">Connect With Uport</div>
