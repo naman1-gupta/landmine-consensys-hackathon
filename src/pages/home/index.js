@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { animated } from 'react-spring';
 import { Layout } from 'antd';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
 
 import { PrivateRoute } from '../../hoc/router';
 
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
+import HomeDashBoard from './home';
 import Seller from './seller';
 import Buyer from './buyer';
 import Administration from './administration';
@@ -34,7 +34,7 @@ class Home extends Component {
           <Layout>
             <Header />
             <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-              <PrivateRoute exact path="/" component={() => <h1>hii</h1>} />
+              <PrivateRoute exact path="/home" component={HomeDashBoard} />
               <PrivateRoute exact path="/home/seller" component={Seller} />
               <PrivateRoute exact path="/home/buyer" component={Buyer} />
               <PrivateRoute exact path="/home/administration" component={Administration} />
