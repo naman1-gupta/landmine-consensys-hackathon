@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { animated } from 'react-spring';
 import Responsive from 'react-responsive-decorator';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router-dom';
 import { DashboardSidebar } from '../../elements/Container';
 
 import SiderMenu from './sideMenu';
@@ -51,4 +51,4 @@ const mapStateToProps = states => ({
   loggedInState: states.user.loggedInState
 });
 
-export default connect(mapStateToProps)(Responsive(Sidebar));
+export default withRouter(connect(mapStateToProps)(Responsive(Sidebar)));
