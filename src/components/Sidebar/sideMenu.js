@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Icon, Layout } from 'antd';
 
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -10,9 +10,18 @@ const { Sider } = Layout;
 
 class SideMenu extends Component {
   render() {
+    console.log(this.props);
+    var selectionMenu = '';
+    switch(this.props.location.pathname){
+      case "/home/seller" : selectionMenu = '1'; break;
+      case "/home/buyer" : selectionMenu = '2'; break;
+      case "/home/administration" : selectionMenu = '3'; break;
+      default: selectionMenu = '1';
+    }
+
     return (
       <Sider width={240} style={{ background: '#fff' }}>
-        <Menu style={{ width: 240, height: '100vh' }} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode="inline">
+        <Menu style={{ width: 240, height: '100vh' }} selectedKeys={[selectionMenu]} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode="inline">
           <SubMenu
             key="sub1"
             title={
@@ -79,4 +88,4 @@ class SideMenu extends Component {
   }
 }
 
-export default SideMenu;
+export default withRouter(SideMenu);
