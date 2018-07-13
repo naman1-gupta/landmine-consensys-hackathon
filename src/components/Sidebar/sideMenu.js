@@ -53,7 +53,7 @@ class SideMenu extends Component {
                 <Link to="/home/administration">Administration</Link>
               </Menu.Item>
             </MenuItemGroup>
-            <MenuItemGroup key="g2" title="Item 2">
+            <MenuItemGroup key="g2" title="Advanced">
               <Menu.Item key="4">Option 4</Menu.Item>
             </MenuItemGroup>
           </SubMenu>
