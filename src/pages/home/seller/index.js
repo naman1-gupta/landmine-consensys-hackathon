@@ -5,6 +5,7 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './seller.css';
 import { MContract } from '../../../utils/contract';
 import { Mweb3 } from '../../../utils/web3';
+import Web3 from 'web3';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -29,10 +30,12 @@ class Seller extends Component {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log(this.state.PropertyChain);
+        console.log(this.state.PropertyChain, values, values.amount);
+        var amountInEther = values.amount + '000000000000000000';
         this.state.PropertyChain.methods.intiateAgreement(values.propertyIndex, values.amount, this.state.account, values.terms).send({
           from: this.state.account,
-          gas: 300000000
+          gas: 100000,
+          value: amountInEther
         });
       }
     });
