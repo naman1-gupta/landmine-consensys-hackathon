@@ -13,6 +13,8 @@ import Logo from '../../assets/logo.svg';
 
 import './login.css';
 
+const mnid = require('mnid');
+
 class Login extends PureComponent {
   state = {
     loading: false,
@@ -25,7 +27,8 @@ class Login extends PureComponent {
       .requestCredentials(
         {
           requested: ['name', 'phone', 'country', 'avatar'],
-          notifications: true // We want this if we want to recieve credentials
+          notifications: true, // We want this if we want to recieve credentials,
+          network_id: '0x3'
         },
         async uri => {
           await this.setState({ uri });
@@ -35,7 +38,8 @@ class Login extends PureComponent {
         this.setState({ loading: true }, () => {
           setTimeout(() => {
             this.setState({ loading: false });
-            this.props.loginUser(credentials);
+            const network = mnid.decode(credentials.address);
+            this.props.loginUser({ ...credentials, network });
             this.setState({
               login: true
             });

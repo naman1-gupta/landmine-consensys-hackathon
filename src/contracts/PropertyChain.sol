@@ -54,6 +54,14 @@ contract PropertyChain {
     constructor() public {
         chairperson = msg.sender;
     }
+
+    function returnConstant() public constant returns(uint) {
+        return 200;
+    }
+
+    function returnConstantTest(uint _num) public constant returns(uint) {
+        return _num * 10;
+    }
     
     function createTransaction(string _hash,address _target,uint _amount) public returns(bool _successful){
         Transaction memory transaction = Transaction({hash: _hash,source: msg.sender,target: _target,amount: _amount});

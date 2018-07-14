@@ -34,7 +34,7 @@ class Home extends Component {
           <Sidebar />
           <Layout>
             <Header />
-            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
               <PrivateRoute exact path="/home" component={HomeDashBoard} />
               <PrivateRoute exact path="/home/seller" component={Seller} />
               <PrivateRoute exact path="/home/buyer" component={Buyer} />

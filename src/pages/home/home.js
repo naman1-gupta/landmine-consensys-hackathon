@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { List, Avatar, Button, Badge } from 'antd';
+import { connect } from 'react-redux';
+
+import SharesContract from '../../utils/sharesContract';
+import { waitForMined } from '../../utils/waitForMined';
+import checkAddressMNID from '../../utils/checkAddressMNID';
 
 import './home.css';
 
@@ -12,7 +17,29 @@ class Home extends Component {
     showLoadingMore: true,
     ownTitle: []
   };
-  componentDidMount() {
+  async componentDidMount() {
+    console.log(this.props.user);
+    const addr = checkAddressMNID(this.props.user.address);
+
+    console.log(SharesContract);
+    console.log(this.props);
+    console.log(this.props.user.network.address);
+    SharesContract.doub(20, (error, txHash) => {
+      if (error) {
+        throw error;
+      }
+      waitForMined(
+        txHash,
+        { blockNumber: null }, // see next area
+        function pendingCB() {
+          // Signal to the user you're still waiting
+          // for a block confirmation
+        },
+        function successCB(data) {
+          console.log('success', data);
+        }
+      );
+    });
     setTimeout(() => {
       this.setState({
         loading: false,
@@ -74,7 +101,7 @@ class Home extends Component {
             </div>
           </div>
         </div>
-        <div style={{ padding: 20 }}>
+        <div style={{ padding: '20px 20px' }}>
           <div style={{ fontSize: 50, marginLeft: 45 }}>Transactions</div>
           <div style={{ padding: 40, background: '#f7f7f7', borderRadius: 20, overflowY: 'scroll', height: '600px' }}>
             <List
@@ -117,4 +144,8 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapStateToProps = states => ({
+  user: states.user.data
+});
+
+export default connect(mapStateToProps)(Home);
