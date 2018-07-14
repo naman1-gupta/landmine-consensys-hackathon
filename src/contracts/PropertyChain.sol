@@ -44,6 +44,11 @@ contract PropertyChain {
         bool authority;
     }
     
+    event AgreementUpdated(
+        uint id,
+        uint state
+        );
+    
     Agreement[] public agreements;
     Property[] public properties;
     Transaction[] public transactions;
@@ -53,14 +58,6 @@ contract PropertyChain {
     
     constructor() public {
         chairperson = msg.sender;
-    }
-
-    function returnConstant() public constant returns(uint) {
-        return 200;
-    }
-
-    function returnConstantTest(uint _num) public constant returns(uint) {
-        return _num * 10;
     }
     
     function createTransaction(string _hash,address _target,uint _amount) public returns(bool _successful){
@@ -105,14 +102,15 @@ contract PropertyChain {
             prop.length--;
             property.owner = agreement.target;
             agreement.state = AgreementState.COMPLETED;
+            emit AgreementUpdated(_agreement_index,uint(agreement.state));
             return true;
         }
         return false;
     }
     
-    function seedProperties(address _user) public {
+    function seedProperties(address _user,string _address) public {
         Property memory property;
-        property.locationAddress =  'House Number 121,Sushant Lok,New Delhi' ;
+        property.locationAddress =  _address ;
         property.owner = _user ;
         property.approved = true;
         properties.push(property);
@@ -159,6 +157,7 @@ contract PropertyChain {
         a.terms = _terms;
         agreements.push(a);
         agreementRequests[_buyer].push(agreements.length -1);
+        emit AgreementUpdated(agreements.length -1,uint(a.state));
         return agreements.length - 1;
     }
     
@@ -173,10 +172,12 @@ contract PropertyChain {
     
     function acceptAgreement(uint index) public {
        agreements[index].state = AgreementState.ACCEPTED; 
+       emit AgreementUpdated(index,uint(agreements[index].state));
     }
     
     function rejectAgreement(uint index) public {
        agreements[index].state = AgreementState.REJECTED; 
+       emit AgreementUpdated(index,uint(agreements[index].state));
     }
     
     function paySeller(uint index) public payable {
@@ -185,7 +186,8 @@ contract PropertyChain {
         a.amountPaid += (msg.value/1000000000000000000);
         if(a.amountPaid >= a.amount){
           a.state = AgreementState.AMOUNT_PAID;
-      }
+          emit AgreementUpdated(index,uint(a.state));
+        }
     }
     
     function pay_duty(uint index) public payable{
@@ -193,6 +195,7 @@ contract PropertyChain {
       a.stampDutyAmountPaid += (msg.value/1000000000000000000);
       if(a.stampDutyAmountPaid >= a.stampDuty){
           a.state = AgreementState.DUTY_PAID;
+          emit AgreementUpdated(index,uint(a.state));
       }
     }
     

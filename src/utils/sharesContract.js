@@ -1,36 +1,12 @@
 import { web3 } from './uport';
 
-import PropertyChain from '../build/contracts/PropertyChain.json';
+import { ABI, ADDRESS } from '../config';
 
 const SharesContractSetup = () => {
-  let SharesABI = web3.eth.contract([
-    {
-      constant: false,
-      inputs: [
-        {
-          name: 'test',
-          type: 'uint256'
-        }
-      ],
-      name: 'doub',
-      outputs: [
-        {
-          name: '',
-          type: 'uint256'
-        }
-      ],
-      payable: false,
-      stateMutability: 'nonpayable',
-      type: 'function'
-    },
-    {
-      inputs: [],
-      payable: false,
-      stateMutability: 'nonpayable',
-      type: 'constructor'
-    }
-  ]);
-  let SharesContractObj = SharesABI.at('0x7e46E43f609e2AcB7Ef4074A84239D1488a16A2D');
+  let SharesABI = web3.eth.contract(ABI);
+  // let SharesContractObj = SharesABI.at('0x733C8A1359a829C1D37d6Ed3Bb4B49adc8E5c9b9');
+  let SharesContractObj = SharesABI.at(ADDRESS);
+
   return SharesContractObj;
 };
 

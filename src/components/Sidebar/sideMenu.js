@@ -35,6 +35,11 @@ class SideMenu extends Component {
         </Link>
         </div>
         <Menu style={{ width: 240, height: '100vh' }} selectedKeys={[selectionMenu]} mode="inline">
+         <Menu.Item key="0">
+              <Link to="/home">
+                <Icon type="home" />Home
+              </Link>
+            </Menu.Item>
           <SubMenu
             key="sub1"
             title={

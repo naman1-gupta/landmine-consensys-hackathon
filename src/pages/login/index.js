@@ -27,8 +27,7 @@ class Login extends PureComponent {
       .requestCredentials(
         {
           requested: ['name', 'phone', 'country', 'avatar'],
-          notifications: true, // We want this if we want to recieve credentials,
-          network_id: '0x3'
+          notifications: true // We want this if we want to recieve credentials,
         },
         async uri => {
           await this.setState({ uri });

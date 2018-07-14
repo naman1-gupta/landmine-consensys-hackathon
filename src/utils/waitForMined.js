@@ -5,7 +5,7 @@ import checkAddressMNID from './checkAddressMNID';
 // Callback handler for whether it was mined or not
 export const waitForMined = async (txHash, response, pendingCB, successCB) => {
   if (response.blockNumber) {
-    successCB();
+    successCB(response);
   } else {
     pendingCB();
     pollingLoop(txHash, response, pendingCB, successCB);

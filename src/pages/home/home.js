@@ -4,54 +4,72 @@ import { Link } from 'react-router-dom';
 import { List, Avatar, Button, Badge } from 'antd';
 import { connect } from 'react-redux';
 
-import SharesContract from '../../utils/sharesContract';
-import { waitForMined } from '../../utils/waitForMined';
+import { Contract } from '../../utils/contract';
+
+import { CONTRACT_ADDRESS } from '../../config';
+import { web3 } from '../../utils/web3';
+
 import checkAddressMNID from '../../utils/checkAddressMNID';
 
 import './home.css';
+
+const mnid = require('mnid');
 
 class Home extends Component {
   state = {
     loading: true,
     loadingMore: false,
     showLoadingMore: true,
-    ownTitle: []
+    account: []
   };
   async componentDidMount() {
     console.log(this.props.user);
     const addr = checkAddressMNID(this.props.user.address);
-
-    console.log(SharesContract);
-    console.log(this.props);
-    console.log(this.props.user.network.address);
-    SharesContract.doub(20, (error, txHash) => {
-      if (error) {
-        throw error;
-      }
-      waitForMined(
-        txHash,
-        { blockNumber: null }, // see next area
-        function pendingCB() {
-          // Signal to the user you're still waiting
-          // for a block confirmation
-        },
-        function successCB(data) {
-          console.log('success', data);
-        }
-      );
+    let PropertyChain = await Contract(CONTRACT_ADDRESS);
+    console.log(PropertyChain);
+    let accounts = await web3.eth.getAccounts();
+    this.setState({
+      PropertyChain,
+      account: accounts[0]
     });
-    setTimeout(() => {
+    console.log(PropertyChain);
+    const ownLandLength = await PropertyChain.call.getUserPropertyIndices(this.state.accounts).call();
+    const dataFetch = [];
+    for (var i = 0; i < ownLandLength.length; i++) {
+      const instructorDetails = await PropertyChain.methods.getPropertyByIndex(i).call();
       this.setState({
-        loading: false,
-        data: [
-          { name: 'Land No. 2324ddfd', status: 'Accepted' },
-          { name: 'Land No. 2324343', status: 'In Process' },
-          { name: 'Land No. 2324fddd', status: 'Rejected' },
-          { name: 'Land No. 2324dsfds43', status: 'Buyer yet to Approve' }
+        instructors: [
+          ...this.state.instructors,
+          {
+            name: instructorDetails[0],
+            age: instructorDetails[1],
+            imageHash: instructorDetails[2]
+          }
         ]
       });
-    }, 500);
+    }
+    this.setState({
+      instructors: [...this.state.instructors, ...dataFetch]
+    });
+
+    const aggrementEvent = await PropertyChain.events.aggrementUpdated;
+
+    aggrementEvent({ from: '0', to: 'latest' }, async (error, event) => {})
+      .on('data', event => {
+        this.setState({
+          list: [
+            ...this.state.account,
+            {
+              id: event.returnValues['id'],
+              state: event.returnValues['state']
+            }
+          ]
+        });
+      })
+      .on('changed', event => {})
+      .on('error', console.error);
   }
+
   status = s => {
     switch (s) {
       case 'In Process':
