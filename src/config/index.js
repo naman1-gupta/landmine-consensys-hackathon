@@ -1,7 +1,7 @@
 import ContractABI from '../build/contracts/PropertyChain.json';
 
-export const CONTRACT_ADDRESS = '0x0C4B180c3D9833f36c8a35716aaFD6F6a7131464';
-export const BLOCKCHAIN_URL = 'http://127.0.0.1:9545/';
+export const CONTRACT_ADDRESS = '0xf204a4ef082f5c04bb89f7d5e6568b796096735a';
+export const BLOCKCHAIN_URL = 'https://ropsten.infura.io/8VQT0qizI2f14an3ZxkB';
 
 //   'wss://ropsten.infura.io/ws/8VQT0qizI2f14an3ZxkB '
 

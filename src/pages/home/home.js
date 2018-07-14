@@ -6,68 +6,80 @@ import { connect } from 'react-redux';
 
 import { Contract } from '../../utils/contract';
 
-import { CONTRACT_ADDRESS } from '../../config';
-import { web3 } from '../../utils/web3';
+import { Mweb3 } from '../../utils/web3';
 
 import checkAddressMNID from '../../utils/checkAddressMNID';
 
 import './home.css';
-
-const mnid = require('mnid');
 
 class Home extends Component {
   state = {
     loading: true,
     loadingMore: false,
     showLoadingMore: true,
-    account: []
+    ownerLandTitle: [],
+    aggrements: []
   };
+
+  aggrement = (ownAggrement, address) => {
+    if (ownAggrement[0] === address) {
+      return {
+        seller: ownAggrement[0],
+        buyer: ownAggrement[1],
+        property_id: ownAggrement[2],
+        amount: ownAggrement[4],
+        state: ownAggrement[5],
+        stampDuty: ownAggrement[6],
+        stampDutyAmount: ownAggrement[7],
+        terms: ownAggrement[8]
+      };
+    }
+  };
+
   async componentDidMount() {
-    console.log(this.props.user);
     const addr = checkAddressMNID(this.props.user.address);
-    let PropertyChain = await Contract(CONTRACT_ADDRESS);
-    console.log(PropertyChain);
-    let accounts = await web3.eth.getAccounts();
+    let PropertyChain = await Contract('0xd548ed5e21ecaa1defa22cf095c2cf9ab7dbc10c');
+    let accounts = await Mweb3.eth.getAccounts();
+    console.log(accounts);
     this.setState({
       PropertyChain,
       account: accounts[0]
     });
-    console.log(PropertyChain);
-    const ownLandLength = await PropertyChain.call.getUserPropertyIndices(this.state.accounts).call();
+    const ownLandLength = await PropertyChain.methods.getUserPropertyIndices(this.state.account).call();
+    // let j = 1;
+    // while (j++) {
+    //   const aggrement = await PropertyChain.methods.agreements(toString(0)).call();
+    //   console.log(aggrement);
+    //   if (aggrement) {
+    //     this.setState({
+    //       aggrement: [...this.state.aggrements, this.aggrement(aggrement, this.state.account)]
+    //     });
+    //     continue;
+    //   }
+    //   break;
+    // }
+
     const dataFetch = [];
+    console.log(ownLandLength);
+    let digital = '';
     for (var i = 0; i < ownLandLength.length; i++) {
-      const instructorDetails = await PropertyChain.methods.getPropertyByIndex(i).call();
-      this.setState({
-        instructors: [
-          ...this.state.instructors,
+      digital = await PropertyChain.methods.getPropertyByIndex(ownLandLength[i]).call();
+      console.log(digital);
+      await this.setState({
+        ownerLandTitle: [
+          ...this.state.ownerLandTitle,
           {
-            name: instructorDetails[0],
-            age: instructorDetails[1],
-            imageHash: instructorDetails[2]
+            address: digital[0],
+            owner: digital[1],
+            approved: digital[2],
+            pastRecords: digital[3]
           }
         ]
       });
     }
     this.setState({
-      instructors: [...this.state.instructors, ...dataFetch]
+      loading: false
     });
-
-    const aggrementEvent = await PropertyChain.events.aggrementUpdated;
-
-    aggrementEvent({ from: '0', to: 'latest' }, async (error, event) => {})
-      .on('data', event => {
-        this.setState({
-          list: [
-            ...this.state.account,
-            {
-              id: event.returnValues['id'],
-              state: event.returnValues['state']
-            }
-          ]
-        });
-      })
-      .on('changed', event => {})
-      .on('error', console.error);
   }
 
   status = s => {
@@ -104,15 +116,15 @@ class Home extends Component {
                 className="demo-loadmore-list"
                 loading={loading}
                 itemLayout="horizontal"
-                dataSource={data}
+                dataSource={this.state.ownerLandTitle}
                 renderItem={item => (
                   <List.Item actions={[<a>more</a>]}>
                     <List.Item.Meta
                       avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                      title={<a href="https://ant.design">{item.name.last}</a>}
-                      description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                      title={<a href="https://ant.design">{item.address}</a>}
+                      description="This is currently owned Ant Design, a design language for background applications, is refined by Ant UED Team"
                     />
-                    <div>content</div>
+                    <div>{item.pastRecords === '0' ? 'No past owner' : `${item.pastRecords} past Owner`}</div>
                   </List.Item>
                 )}
               />
@@ -121,7 +133,7 @@ class Home extends Component {
         </div>
         <div style={{ padding: '20px 20px' }}>
           <div style={{ fontSize: 50, marginLeft: 45 }}>Transactions</div>
-          <div style={{ padding: 40, background: '#f7f7f7', borderRadius: 20, overflowY: 'scroll', height: '600px' }}>
+          <div style={{ padding: 40, background: '#f7f7f7', borderRadius: 20, overflowY: 'scroll', height: '600px', width: '600px' }}>
             <List
               className="demo-loadmore-list"
               loading={loading}
