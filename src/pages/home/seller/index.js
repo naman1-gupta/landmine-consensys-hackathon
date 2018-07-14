@@ -17,6 +17,7 @@ class Seller extends Component {
   async componentDidMount() {
     let accounts = await Mweb3.eth.getAccounts();
     let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    console.log(PropertyChain, accounts[0]);
 
     this.setState({
       PropertyChain,
@@ -26,7 +27,7 @@ class Seller extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
         console.log(this.state.PropertyChain);
         this.state.PropertyChain.methods.intiateAgreement(values.propertyIndex, values.amount, this.state.account, values.terms).send({

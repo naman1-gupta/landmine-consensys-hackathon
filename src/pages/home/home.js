@@ -18,7 +18,8 @@ class Home extends Component {
     loadingMore: false,
     showLoadingMore: true,
     ownerLandTitle: [],
-    aggrements: []
+    aggrements: [],
+    transactions: []
   };
 
   aggrement = (ownAggrement, address) => {
@@ -46,6 +47,7 @@ class Home extends Component {
       account: accounts[0]
     });
     const ownLandLength = await PropertyChain.methods.getUserPropertyIndices(this.state.account).call();
+    const transactions = await PropertyChain.methods.getAgreementsLength().call();
     // let j = 1;
     // while (j++) {
     //   const aggrement = await PropertyChain.methods.agreements(toString(0)).call();
@@ -59,8 +61,6 @@ class Home extends Component {
     //   break;
     // }
 
-    const dataFetch = [];
-    console.log(ownLandLength);
     let digital = '';
     for (var i = 0; i < ownLandLength.length; i++) {
       digital = await PropertyChain.methods.getPropertyByIndex(ownLandLength[i]).call();
@@ -77,21 +77,47 @@ class Home extends Component {
         ]
       });
     }
+
+    for (var i = 0; i < transactions; i++) {
+      digital = await PropertyChain.methods.getAgreementByIndex(i).call();
+      console.log(digital);
+      await this.setState({
+        transactions: [
+          ...this.state.transactions,
+          {
+            seller: digital[0],
+            buyer: digital[1],
+            property_id: digital[2],
+            amount: digital[4],
+            state: digital[5],
+            stampDuty: digital[6],
+            stampDutyAmount: digital[7],
+            terms: digital[8]
+          }
+        ]
+      });
+    }
     this.setState({
       loading: false
     });
   }
 
   status = s => {
-    switch (s) {
-      case 'In Process':
-        return 'processing';
-      case 'Rejected':
-        return 'error';
-      case 'Accepted':
-        return 'success';
-      case 'Buyer yet to Approve':
-        return 'warning';
+    switch (parseInt(s)) {
+      case 0:
+        return 'INITIATED';
+      case 1:
+        return 'ACCEPTED';
+      case 2:
+        return 'REJECTED';
+      case 3:
+        return 'AMOUNT PAID';
+      case 4:
+        return 'DUTY PAID';
+      case 5:
+        return 'COMPLETED';
+      case 6:
+        return 'GOV REJECTED';
     }
   };
   render() {
@@ -110,7 +136,7 @@ class Home extends Component {
             </Link>
           </div>
           <div>
-            <div style={{ fontSize: 50 }}>Currently owned Land titles</div>
+            <div style={{ fontSize: 50 }}>Land Title you Own</div>
             <div style={{ background: '#f7f7f7', borderRadius: 20, padding: 40, overflowY: 'scroll', height: '600px' }}>
               <List
                 className="demo-loadmore-list"
@@ -133,20 +159,18 @@ class Home extends Component {
         </div>
         <div style={{ padding: '20px 20px' }}>
           <div style={{ fontSize: 50, marginLeft: 45 }}>Transactions</div>
-          <div style={{ padding: 40, background: '#f7f7f7', borderRadius: 20, overflowY: 'scroll', height: '600px', width: '600px' }}>
+          <div style={{ padding: 40, background: '#f7f7f7', borderRadius: 20, overflowY: 'scroll', height: '800px', width: '800px' }}>
             <List
               className="demo-loadmore-list"
               loading={loading}
               itemLayout="horizontal"
-              dataSource={data}
+              dataSource={this.state.transactions}
               renderItem={item => (
                 <List.Item
                   actions={[
-                    <Button
-                      type={item.status === 'Accepted' || item.status === 'In Process' || item.status === 'Buyer yet to Approve' ? 'primary' : 'danger'}
-                      style={{ width: 200, backgroundColor: item.status === 'Accepted' ? 'green' : item.status === 'Buyer yet to Approve' ? 'orange' : '' }}
-                    >
-                      {item.status}
+                    <Button type="primary" style={{ width: 200 }}>
+                      {console.log(item.state)}
+                      {this.status(item.state)}
                     </Button>
                   ]}
                 >
@@ -160,10 +184,10 @@ class Home extends Component {
                         }}
                       />
                     }
-                    title={<a href="https://ant.design">{item.name.last}</a>}
+                    title={<a href="https://ant.design">Property #{item.property_id}</a>}
                     description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                   />
-                  <div>content</div>
+                  <div>Wei {item.amount}</div>
                 </List.Item>
               )}
             />

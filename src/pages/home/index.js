@@ -34,6 +34,8 @@ class Home extends Component {
           <Sidebar />
           <Layout>
             <Header />
+            {/* <animated.div>
+              {() => ( */}
             <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
               <PrivateRoute exact path="/home" component={HomeDashBoard} />
               <PrivateRoute exact path="/home/seller" component={Seller} />
@@ -41,6 +43,8 @@ class Home extends Component {
               <PrivateRoute exact path="/home/administration" component={Administration} />
               <PrivateRoute exact path="/home/explorer" component={Explorer} />
             </Content>
+            {/* )}
+            </animated.div> */}
           </Layout>
         </Layout>
       </animated.div>
