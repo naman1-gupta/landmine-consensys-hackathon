@@ -136,7 +136,7 @@ class Home extends Component {
             </Link>
           </div>
           <div>
-            <div style={{ fontSize: 50 }}>Land Title you Own</div>
+            <div style={{ fontSize: 50 }}>Land titles you own</div>
             <div style={{ background: '#f7f7f7', borderRadius: 20, padding: 40, overflowY: 'scroll', height: '600px' }}>
               <List
                 className="demo-loadmore-list"

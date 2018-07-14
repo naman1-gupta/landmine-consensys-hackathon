@@ -2,58 +2,56 @@ import React, { Component } from 'react';
 import { List, Avatar, Button, Spin } from 'antd';
 import AdminInfo from '../../../components/AdminModal/Info';
 
+import { Contract } from '../../../utils/contract';
+
+import { Mweb3 } from '../../../utils/web3';
+
 class Administration extends Component {
   state = {
     loading: true,
     loadingMore: false,
     showLoadingMore: true,
+    aggrements: [],
     data: []
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        data: [
+  async componentDidMount() {
+    let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    let accounts = await Mweb3.eth.getAccounts();
+    console.log(accounts);
+    this.setState({
+      PropertyChain,
+      account: accounts[0]
+    });
+    const a = await PropertyChain.methods.getAgreementsLength().call();
+    console.log(a);
+    // const a = await PropertyChain.methods.transferProperty(, Date.now().toString()).call();
+
+    for (var i = 0; i < a; i++) {
+      let ownAggrement = await PropertyChain.methods.getAgreementByIndex(i).call();
+      await this.setState({
+        aggrements: [
+          ...this.state.aggrements,
           {
-            name: '200'
+            seller: ownAggrement[0],
+            buyer: ownAggrement[1],
+            property_id: ownAggrement[2],
+            amount: ownAggrement[4],
+            state: ownAggrement[5],
+            stampDuty: ownAggrement[6],
+            stampDutyAmount: ownAggrement[7],
+            terms: ownAggrement[8]
           }
         ]
       });
-    }, 500);
+    }
+    this.setState({
+      loading: false
+    });
   }
 
-  // getData = (callback) => {
-  //   reqwest({
-  //     url: fakeDataUrl,
-  //     type: 'json',
-  //     method: 'get',
-  //     contentType: 'application/json',
-  //     success: (res) => {
-  //       callback(res);
-  //     },
-  //   });
-  // }
-
-  // onLoadMore = () => {
-  //   this.setState({
-  //     loadingMore: true,
-  //   });
-  //   this.getData((res) => {
-  //     const data = this.state.data.concat(res.results);
-  //     this.setState({
-  //       data,
-  //       loadingMore: false,
-  //     }, () => {
-  //       // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-  //       // In real scene, you can using public method of react-virtualized:
-  //       // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-  //       window.dispatchEvent(new Event('resize'));
-  //     });
-  //   });
-  // }
-
   render() {
+    console.log(this.state);
     const { loading, loadingMore, showLoadingMore, data } = this.state;
     const loadMore = showLoadingMore ? (
       <div style={{ textAlign: 'center', marginTop: 12, height: 32, lineHeight: '32px' }}>
@@ -67,7 +65,7 @@ class Administration extends Component {
         loading={loading}
         itemLayout="horizontal"
         loadMore={loadMore}
-        dataSource={data}
+        dataSource={this.state.aggrements}
         renderItem={item => (
           <List.Item
             actions={[
@@ -80,8 +78,13 @@ class Administration extends Component {
           >
             <List.Item.Meta
               avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-              title={<a href="https://ant.design">{item.name.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+              title={
+                <a href="https://ant.design">
+                  <div>Seller Address: {item.seller}</div>
+                  <div>Buyer Address: {item.buyer}</div>
+                </a>
+              }
+              description={`Stamp Amount: ${item.amount}`}
             />
             <div>content</div>
           </List.Item>
