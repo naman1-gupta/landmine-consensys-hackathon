@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import { List, Avatar, Spin, Tabs, Button } from 'antd';
 import BuyerInfo from '../../../components/BuyerModal/Info';
 import Track from '../../../components/BuyerModal/Track';
+import { Contract } from '../../../utils/contract';
+
+import { Mweb3 } from '../../../utils/web3';
 
 const TabPane = Tabs.TabPane;
 
@@ -11,16 +14,41 @@ class Buyer extends Component {
     loading: true,
     loadingMore: false,
     showLoadingMore: true,
-    data: []
+    aggrements: []
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        data: [{ title: 'Contract No: #IND00001', name: 'Shubham Singh' }]
+  async componentDidMount() {
+    let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    let accounts = await Mweb3.eth.getAccounts();
+    console.log(accounts);
+    this.setState({
+      PropertyChain,
+      account: accounts[0]
+    });
+    const a = await PropertyChain.methods.getAgreementRequests(this.state.account).call();
+    console.log(a);
+
+    for (var i = 0; i < a.length; i++) {
+      let ownAggrement = await PropertyChain.methods.getAgreementByIndex(a[i]).call();
+      await this.setState({
+        aggrement: [
+          ...this.state.aggrements,
+          {
+            seller: ownAggrement[0],
+            buyer: ownAggrement[1],
+            property_id: ownAggrement[2],
+            amount: ownAggrement[4],
+            state: ownAggrement[5],
+            stampDuty: ownAggrement[6],
+            stampDutyAmount: ownAggrement[7],
+            terms: ownAggrement[8]
+          }
+        ]
       });
-    }, 500);
+    }
+    this.setState({
+      loading: false
+    });
   }
 
   render() {
@@ -39,7 +67,7 @@ class Buyer extends Component {
             loading={loading}
             itemLayout="horizontal"
             loadMore={loadMore}
-            dataSource={data}
+            dataSource={this.state.aggrements}
             renderItem={item => (
               <List.Item
                 actions={[
@@ -53,7 +81,7 @@ class Buyer extends Component {
                 <List.Item.Meta
                   avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                   title={<a href="https://ant.design">{item.name}</a>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                  description={`Seller with address ${item.seller} initiated a aggrement request for you`}
                 />
                 <div>content</div>
               </List.Item>

@@ -38,7 +38,7 @@ class Home extends Component {
 
   async componentDidMount() {
     const addr = checkAddressMNID(this.props.user.address);
-    let PropertyChain = await Contract('0xd548ed5e21ecaa1defa22cf095c2cf9ab7dbc10c');
+    let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
     let accounts = await Mweb3.eth.getAccounts();
     console.log(accounts);
     this.setState({

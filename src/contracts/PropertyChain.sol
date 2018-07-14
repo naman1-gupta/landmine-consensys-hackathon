@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.8;
 contract PropertyChain {
     address chairperson;
     enum AgreementState { INITIATED , ACCEPTED, REJECTED ,AMOUNT_PAID, DUTY_PAID , COMPLETED , GOV_REJECTED }
@@ -58,6 +58,19 @@ contract PropertyChain {
     
     constructor() public {
         chairperson = msg.sender;
+    }
+    
+    function getAgreementsLength() public constant returns(uint){
+        return(agreements.length);
+    }
+    
+    function getPropertiesLength() public constant returns(uint){
+        return(properties.length);
+    }
+    
+    
+    function getAgreementRequests(address _a) public constant returns(uint[]){
+        return(agreementRequests[_a]);
     }
     
     function createTransaction(string _hash,address _target,uint _amount) public returns(bool _successful){

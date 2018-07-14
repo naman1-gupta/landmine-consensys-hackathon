@@ -7,6 +7,7 @@ import { Contract } from '../../../utils/contract';
 import { Mweb3 } from '../../../utils/web3';
 
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
 class Seller extends Component {
   state = {
@@ -15,7 +16,7 @@ class Seller extends Component {
 
   async componentDidMount() {
     let accounts = await Mweb3.eth.getAccounts();
-    let PropertyChain = await Contract('0xd548ed5e21ecaa1defa22cf095c2cf9ab7dbc10c');
+    let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
 
     this.setState({
       PropertyChain,
@@ -27,7 +28,8 @@ class Seller extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.state.PropertyChain.methods.intiateAgreement(value.propertyIndex, values.amount, this.state.account, '').send({
+        console.log(this.state.PropertyChain);
+        this.state.PropertyChain.methods.intiateAgreement(values.propertyIndex, values.amount, this.state.account, values.terms).send({
           from: this.state.account,
           gas: 300000000
         });
@@ -51,14 +53,19 @@ class Seller extends Component {
                     })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Buyer Address" />)}
                   </FormItem>
                   <FormItem>
-                    {getFieldDecorator('check', {
+                    {getFieldDecorator('propertyIndex', {
+                      rules: [{ required: true, message: 'Please input propetry index!' }]
+                    })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} type="number" placeholder="Property Index" />)}
+                  </FormItem>
+                  <FormItem>
+                    {getFieldDecorator('amount', {
                       rules: [{ required: true, message: 'Please input your money!' }]
                     })(<Input prefix={<Icon type="pay-circle" style={{ color: 'rgba(0,0,0,.25)' }} />} type="number" placeholder="Deal Price" />)}
                   </FormItem>
                   <FormItem>
-                    {getFieldDecorator('amount', {
+                    {getFieldDecorator('terms', {
                       rules: [{ required: true, message: "Please input your buyer's address!" }]
-                    })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Buyer Address" />)}
+                    })(<TextArea row={4} prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Term and Condition" />)}
                   </FormItem>
                   <FormItem>
                     {getFieldDecorator('remember', {
