@@ -23,6 +23,9 @@ class SideMenu extends Component {
       case '/home/administration':
         selectionMenu = '3';
         break;
+      case '/home/explorer':
+        selectionMenu = '4';
+      break;
       default:
         selectionMenu = '0';
     }
@@ -42,6 +45,7 @@ class SideMenu extends Component {
             </Menu.Item>
           <SubMenu
             key="sub1"
+            openKeys={['1']}
             title={
               <span>
                 <Icon type="user" />
@@ -60,7 +64,7 @@ class SideMenu extends Component {
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="4">
-            <Link to="/blockExplorer">
+            <Link to="/home/explorer">
               <Icon type="link" />Block Explorer
             </Link>
           </Menu.Item>

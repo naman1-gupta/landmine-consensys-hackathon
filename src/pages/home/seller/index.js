@@ -25,9 +25,9 @@ class Seller extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err, value) => {
       if (!err) {
-        this.state.PropertyChain.methods.intiateAgreement(value.propertyIndex, values.amount, this.state.account, '').send({
+        this.state.PropertyChain.methods.intiateAgreement(value.propertyIndex, value.amount, this.state.account, '').send({
           from: this.state.account,
           gas: 300000000
         });
