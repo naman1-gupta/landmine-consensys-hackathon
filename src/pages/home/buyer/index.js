@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { List, Avatar, Spin, Tabs, Button } from 'antd';
 import BuyerInfo from '../../../components/BuyerModal/Info';
 import Track from '../../../components/BuyerModal/Track';
-import { Contract } from '../../../utils/contract';
+import { Contract, MContract } from '../../../utils/contract';
 
 import { Mweb3 } from '../../../utils/web3';
 
@@ -19,10 +19,13 @@ class Buyer extends Component {
 
   async componentDidMount() {
     let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    let PropertyChainMetamask = await MContract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+
     let accounts = await Mweb3.eth.getAccounts();
     console.log(accounts);
     this.setState({
       PropertyChain,
+      PropertyChainMetamask,
       account: accounts[0]
     });
     const a = await PropertyChain.methods.getAgreementsLength().call();
@@ -41,7 +44,8 @@ class Buyer extends Component {
             state: ownAggrement[5],
             stampDuty: ownAggrement[6],
             stampDutyAmount: ownAggrement[7],
-            terms: ownAggrement[8]
+            terms: ownAggrement[8],
+            aggrementIndex: i
           }
         ]
       });
@@ -51,6 +55,22 @@ class Buyer extends Component {
     });
   }
 
+  accept = (prropertyIndex, aggrementIndex, amount) => {
+    this.state.PropertyChainMetamask.methods.acceptAgreement(prropertyIndex).send(
+      {
+        from: this.state.account,
+        gas: 4300000,
+        value: 0
+      },
+      (err, res) => {
+        this.state.PropertyChainMetamask.methods.paySeller(aggrementIndex).send({
+          from: this.state.account,
+          gas: 4300000,
+          value: amount + '000000000000000000'
+        });
+      }
+    );
+  };
   render() {
     const { loading, loadingMore, showLoadingMore, data } = this.state;
     const loadMore = showLoadingMore ? (
@@ -71,7 +91,7 @@ class Buyer extends Component {
             renderItem={item => (
               <List.Item
                 actions={[
-                  <Button type="primary" style={{ background: 'green', borderColor: 'green' }}>
+                  <Button type="primary" style={{ background: 'green', borderColor: 'green' }} onClick={() => this.accept(item.property_id, item.aggrementIndex, item.amount)}>
                     Accept
                   </Button>,
                   <BuyerInfo text="info" data={item} />,
@@ -83,7 +103,7 @@ class Buyer extends Component {
                   title={<a href="https://ant.design">{item.name}</a>}
                   description={`Seller with address ${item.seller} initiated a aggrement request for you`}
                 />
-                <div>content</div>
+                <div>Property #{item.property_id}</div>
               </List.Item>
             )}
           />

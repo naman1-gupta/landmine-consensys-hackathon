@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { List, Avatar, Button, Spin } from 'antd';
 import AdminInfo from '../../../components/AdminModal/Info';
 
-import { Contract } from '../../../utils/contract';
+import { Contract, MContract } from '../../../utils/contract';
 
 import { Mweb3 } from '../../../utils/web3';
 
@@ -17,10 +17,13 @@ class Administration extends Component {
 
   async componentDidMount() {
     let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    let PropertyChainMetamask = await MContract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+
     let accounts = await Mweb3.eth.getAccounts();
     console.log(accounts);
     this.setState({
       PropertyChain,
+      PropertyChainMetamask,
       account: accounts[0]
     });
     const a = await PropertyChain.methods.getAgreementsLength().call();
@@ -40,7 +43,8 @@ class Administration extends Component {
             state: ownAggrement[5],
             stampDuty: ownAggrement[6],
             stampDutyAmount: ownAggrement[7],
-            terms: ownAggrement[8]
+            terms: ownAggrement[8],
+            aggrementsIndex: i
           }
         ]
       });
@@ -49,6 +53,14 @@ class Administration extends Component {
       loading: false
     });
   }
+
+  accept = aggrementsIndex => {
+    this.state.PropertyChainMetamask.methods.transferProperty(aggrementsIndex, Date.now().toString()).send({
+      from: this.state.account,
+      gas: 4300000,
+      value: 0
+    });
+  };
 
   render() {
     console.log(this.state);
@@ -69,7 +81,7 @@ class Administration extends Component {
         renderItem={item => (
           <List.Item
             actions={[
-              <Button type="primary" style={{ background: 'green', borderColor: 'green' }}>
+              <Button type="primary" style={{ background: 'green', borderColor: 'green' }} onClick={() => this.accept(item.aggrementsIndex)}>
                 Accept
               </Button>,
               <AdminInfo text="info" data={item} />,
@@ -82,11 +94,12 @@ class Administration extends Component {
                 <a href="https://ant.design">
                   <div>Seller Address: {item.seller}</div>
                   <div>Buyer Address: {item.buyer}</div>
+                  <div>Amount: {item.amount} ETH</div>
                 </a>
               }
               description={`Stamp Amount: ${item.amount}`}
             />
-            <div>content</div>
+            <div>Property #{item.property_id}</div>
           </List.Item>
         )}
       />

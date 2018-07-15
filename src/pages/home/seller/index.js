@@ -32,10 +32,10 @@ class Seller extends Component {
       if (!err) {
         console.log(this.state.PropertyChain, values, values.amount);
         var amountInEther = values.amount + '000000000000000000';
-        this.state.PropertyChain.methods.intiateAgreement(values.propertyIndex, values.amount, this.state.account, values.terms).send({
+        this.state.PropertyChain.methods.intiateAgreement(values.propertyIndex, values.amount, values.address, values.terms).send({
           from: this.state.account,
-          gas: 100000,
-          value: amountInEther
+          gas: 4300000,
+          value: 0
         });
       }
     });

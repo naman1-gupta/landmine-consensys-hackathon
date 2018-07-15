@@ -137,7 +137,7 @@ class Home extends Component {
           </div>
           <div>
             <div style={{ fontSize: 50 }}>Land titles you own</div>
-            <div style={{ background: '#f7f7f7', borderRadius: 20, padding: 40, overflowY: 'scroll', height: '600px' }}>
+            <div style={{ background: '#f7f7f7', borderRadius: 20, padding: 40, overflowY: 'scroll', height: '600px', width: '600px' }}>
               <List
                 className="demo-loadmore-list"
                 loading={loading}
@@ -148,7 +148,7 @@ class Home extends Component {
                     <List.Item.Meta
                       avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                       title={<a href="https://ant.design">{item.address}</a>}
-                      description="This is currently owned Ant Design, a design language for background applications, is refined by Ant UED Team"
+                      description={`Approved Status: ${item.approved}`}
                     />
                     <div>{item.pastRecords === '0' ? 'No past owner' : `${item.pastRecords} past Owner`}</div>
                   </List.Item>
@@ -184,9 +184,9 @@ class Home extends Component {
                       />
                     }
                     title={<a href="https://ant.design">Property #{item.property_id}</a>}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    description={`Terms: ${item.terms.substring(0, 20)}...`}
                   />
-                  <div>Wei {item.amount}</div>
+                  <div>{item.amount} ETH</div>
                 </List.Item>
               )}
             />

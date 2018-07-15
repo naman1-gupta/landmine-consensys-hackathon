@@ -55,3 +55,17 @@ export const DashboardHeader = Keyframes.Spring({
     await call({ to: { opacity: 0, y: -100 }, config: config.default });
   }
 });
+
+export const ContentContainer = Keyframes.Spring({
+  // open: [{ from: { opacity: 0, y: -1000 } }, { to: { opacity: 1, y: 0 }, config: config.fast }],
+  open: async call => {
+    await call({ to: { opacity: 0, y: 100 }, config: config.gentle });
+    await delay(120);
+    await call({ to: { opacity: 1, y: 0 }, config: config.default });
+  },
+  close: async call => {
+    await call({ from: { opacity: 1, y: 0 }, config: config.default });
+    await delay(120);
+    await call({ to: { opacity: 0, y: 100 }, config: config.default });
+  }
+});
