@@ -41,7 +41,6 @@ class Home extends Component {
               <PrivateRoute exact path="/home/seller" component={Seller} />
               <PrivateRoute exact path="/home/buyer" component={Buyer} />
               <PrivateRoute exact path="/home/administration" component={Administration} />
-              <PrivateRoute exact path="/home/explorer" component={Explorer} />
             </Content>
             {/* )}
             </animated.div> */}

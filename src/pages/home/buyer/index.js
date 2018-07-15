@@ -25,11 +25,11 @@ class Buyer extends Component {
       PropertyChain,
       account: accounts[0]
     });
-    const a = await PropertyChain.methods.getAgreementRequests(this.state.account).call();
+    const a = await PropertyChain.methods.getAgreementsLength().call();
     console.log(a);
 
-    for (var i = 0; i < a.length; i++) {
-      let ownAggrement = await PropertyChain.methods.getAgreementByIndex(a[i]).call();
+    for (var i = 0; i < a; i++) {
+      let ownAggrement = await PropertyChain.methods.getAgreementByIndex(i).call();
       await this.setState({
         aggrement: [
           ...this.state.aggrements,
@@ -67,7 +67,7 @@ class Buyer extends Component {
             loading={loading}
             itemLayout="horizontal"
             loadMore={loadMore}
-            dataSource={this.state.aggrements}
+            dataSource={this.state.aggrement}
             renderItem={item => (
               <List.Item
                 actions={[

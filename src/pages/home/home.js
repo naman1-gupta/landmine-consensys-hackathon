@@ -41,7 +41,6 @@ class Home extends Component {
     const addr = checkAddressMNID(this.props.user.address);
     let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
     let accounts = await Mweb3.eth.getAccounts();
-    console.log(accounts);
     this.setState({
       PropertyChain,
       account: accounts[0]
@@ -64,7 +63,7 @@ class Home extends Component {
     let digital = '';
     for (var i = 0; i < ownLandLength.length; i++) {
       digital = await PropertyChain.methods.getPropertyByIndex(ownLandLength[i]).call();
-      console.log(digital);
+      console.log('digital', digital);
       await this.setState({
         ownerLandTitle: [
           ...this.state.ownerLandTitle,
@@ -72,7 +71,8 @@ class Home extends Component {
             address: digital[0],
             owner: digital[1],
             approved: digital[2],
-            pastRecords: digital[3]
+            pastRecords: digital[3],
+            property_id: ownLandLength[i]
           }
         ]
       });
@@ -144,7 +144,7 @@ class Home extends Component {
                 itemLayout="horizontal"
                 dataSource={this.state.ownerLandTitle}
                 renderItem={item => (
-                  <List.Item actions={[<a>more</a>]}>
+                  <List.Item actions={[<a>Property #{item.property_id}</a>]}>
                     <List.Item.Meta
                       avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                       title={<a href="https://ant.design">{item.address}</a>}
@@ -169,7 +169,6 @@ class Home extends Component {
                 <List.Item
                   actions={[
                     <Button type="primary" style={{ width: 200 }}>
-                      {console.log(item.state)}
                       {this.status(item.state)}
                     </Button>
                   ]}

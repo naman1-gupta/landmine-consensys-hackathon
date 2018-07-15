@@ -3,7 +3,7 @@ import { Transition, animated } from 'react-spring';
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './seller.css';
-import { Contract } from '../../../utils/contract';
+import { MContract } from '../../../utils/contract';
 import { Mweb3 } from '../../../utils/web3';
 
 const FormItem = Form.Item;
@@ -16,7 +16,7 @@ class Seller extends Component {
 
   async componentDidMount() {
     let accounts = await Mweb3.eth.getAccounts();
-    let PropertyChain = await Contract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
+    let PropertyChain = await MContract('0xc4bb339e2c1e81cc84c668617cd0e76536c365be');
     console.log(PropertyChain, accounts[0]);
 
     this.setState({
