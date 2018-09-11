@@ -1,8 +1,11 @@
 import { Connect, SimpleSigner } from 'uport-connect';
 
-const uport = new Connect('Property Chain', {
-  clientId: '2osiU2anCdPt5NDBF6yYGPM3SxqKrMR2rgb',
-  signer: SimpleSigner('788ed901b9ee2d16a9b0248f05b0967309f0e4183e44ee677aeecb743b1660b8')
+const uport = new Connect('LandMine', {
+  clientId: '2otjBKeonUnoo42AJ2kN4Yp4jUsHAHgLzoH',
+  network: 'ropsten',
+  signer: SimpleSigner(
+    'bbb30ebb6729800226df3e07412dff567e8254453095046a7fbdbe42bcb0b731'
+  )
 });
 // const uport = new Connect('uPort Demo', {
 //   clientId: '2oeXufHGDpU51bfKBsZDdu7Je9weJ3r7sVG',

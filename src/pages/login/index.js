@@ -26,6 +26,8 @@ class Login extends PureComponent {
     await uport
       .requestCredentials(
         {
+          network_id: '0x3',
+          accountType: 'segregated',
           requested: ['name', 'phone', 'country', 'avatar'],
           notifications: true // We want this if we want to recieve credentials,
         },
@@ -37,7 +39,7 @@ class Login extends PureComponent {
         this.setState({ loading: true }, () => {
           setTimeout(() => {
             this.setState({ loading: false });
-            const network = mnid.decode(credentials.address);
+            const network = mnid.decode(credentials.networkAddress);
             this.props.loginUser({ ...credentials, network });
             this.setState({
               login: true
@@ -62,7 +64,10 @@ class Login extends PureComponent {
 
   render() {
     return (
-      <animated.div className="login" style={{ ...this.props.style, display: 'flex' }}>
+      <animated.div
+        className="login"
+        style={{ ...this.props.style, display: 'flex' }}
+      >
         <Sidebar
           native
           state={!this.state.login ? 'open' : 'close'}
@@ -73,11 +78,25 @@ class Login extends PureComponent {
           }}
         >
           {({ x }) => (
-            <animated.div className="sidebar" style={{ transform: x.interpolate(x => `translate3d(${x}%,0,0)`) }}>
-              <LoginContainer native state={!this.state.login ? 'show' : 'showAndHide'}>
+            <animated.div
+              className="sidebar"
+              style={{
+                transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+              }}
+            >
+              <LoginContainer
+                native
+                state={!this.state.login ? 'show' : 'showAndHide'}
+              >
                 {styles => (
                   <div className="form">
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
                       <img
                         src={Logo}
                         style={{
@@ -87,15 +106,33 @@ class Login extends PureComponent {
                         }}
                       />
                     </div>
-                    <animated.div style={{ ...styles, transform: styles.y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
+                    <animated.div
+                      style={{
+                        ...styles,
+                        transform: styles.y.interpolate(
+                          y => `translate3d(0,${y}px,0)`
+                        )
+                      }}
+                    >
                       <div className="title">
                         <div className="main">Connect With Uport</div>
-                        <span className="subtitle">Scan the QR code with the uPort mobile app</span>
+                        <span className="subtitle">
+                          Scan the QR code with the uPort mobile app
+                        </span>
                       </div>
 
                       <div className="form-login">
-                        <Spin size="large" style={{ maxHeight: '467px' }} spinning={this.state.loading}>
-                          <QRCode value={this.state.uri} size={467} bgColor="rgba(230, 224, 248)" fgColor="#817bff" />
+                        <Spin
+                          size="large"
+                          style={{ maxHeight: '467px' }}
+                          spinning={this.state.loading}
+                        >
+                          <QRCode
+                            value={this.state.uri}
+                            size={467}
+                            bgColor="rgba(230, 224, 248)"
+                            fgColor="#817bff"
+                          />
                         </Spin>
                       </div>
                     </animated.div>
